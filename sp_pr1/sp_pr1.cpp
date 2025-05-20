@@ -4,39 +4,39 @@
 void StudyMessageBoxValues()
 {
     int iRetValue1, iRetValue2;
-    LPCTSTR lpszMesBoxTitle = TEXT("Изучаем MessageBox");
+    LPCTSTR lpszMessageBoxTitle = TEXT("Вариант 12");
     LPCTSTR lpszResponse;
 
     do {
-        // Первое окно с кнопками Abort/Retry/Ignore
+        // Окно с кнопками Abort/Retry/Ignore, иконкой STOP и 3-й кнопкой по умолчанию
         iRetValue1 = MessageBox(NULL,
-            TEXT("Нажмите одну из кнопок."),
-            lpszMesBoxTitle,
-            MB_ABORTRETRYIGNORE | MB_ICONEXCLAMATION | MB_SETFOREGROUND);
+            TEXT("The message box contains three push buttons: Abort, Retry, Ignore"),
+            lpszMessageBoxTitle,
+            MB_ABORTRETRYIGNORE | MB_ICONSTOP | MB_DEFBUTTON3 | MB_SETFOREGROUND);
 
         // Обработка результата
         switch (iRetValue1)
         {
         case IDABORT:
-            lpszResponse = TEXT("Нажата кнопка Прервать (ABORT)");
+            lpszResponse = TEXT("You pressed Abort");
             break;
         case IDRETRY:
-            lpszResponse = TEXT("Нажата кнопка Повторить (RETRY)");
+            lpszResponse = TEXT("You pressed Retry");
             break;
         case IDIGNORE:
-            lpszResponse = TEXT("Нажата кнопка Пропустить (IGNORE)");
+            lpszResponse = TEXT("You pressed Ignore");
             break;
         default:
-            lpszResponse = TEXT("Ответ мне не понятен.");
+            lpszResponse = TEXT("Unknown response");
         }
 
         // Формируем сообщение для второго окна
         TCHAR buf[200] = TEXT("");
         lstrcat(buf, lpszResponse);
-        lstrcat(buf, TEXT("\n\nПродолжить изучение возвращаемых значений?"));
+        lstrcat(buf, TEXT("\nContinue testing message boxes?"));
 
         // Второе окно с вопросом о продолжении
-        iRetValue2 = MessageBox(NULL, buf, lpszMesBoxTitle,
+        iRetValue2 = MessageBox(NULL, buf, lpszMessageBoxTitle,
             MB_YESNO | MB_ICONQUESTION | MB_SETFOREGROUND);
     } while (iRetValue2 != IDNO);
 }
@@ -44,13 +44,6 @@ void StudyMessageBoxValues()
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     LPSTR lpszCmdLine, int nCmdShow)
 {
-    // Показываем информационное сообщение
-    LPCTSTR lpszHelloText = GetMessageText();
-    LPCTSTR lpszHelloWndTitle = MESSAGE_TITLE;
-    MessageBox(NULL, lpszHelloText, lpszHelloWndTitle, MB_OK | MB_ICONINFORMATION);
-
-    // Запускаем изучение возвращаемых значений
     StudyMessageBoxValues();
-
     return 0;
 }
