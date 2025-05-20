@@ -1,34 +1,56 @@
 ﻿#include <Windows.h>
 #include "sp_pr1.h"
 
-void ShowDifferentMessageBoxes()
+void StudyMessageBoxValues()
 {
-    LPCTSTR lpszHelloText = GetMessageText();
-    LPCTSTR lpszHelloWndTitle = MESSAGE_TITLE;
+    int iRetValue1, iRetValue2;
+    LPCTSTR lpszMesBoxTitle = TEXT("Изучаем MessageBox");
+    LPCTSTR lpszResponse;
 
-    // 1. Стандартное окно с кнопкой OK
-    MessageBox(NULL, lpszHelloText, lpszHelloWndTitle, MB_OK);
+    do {
+        // Первое окно с кнопками Abort/Retry/Ignore
+        iRetValue1 = MessageBox(NULL,
+            TEXT("Нажмите одну из кнопок."),
+            lpszMesBoxTitle,
+            MB_ABORTRETRYIGNORE | MB_ICONEXCLAMATION | MB_SETFOREGROUND);
 
-    // 2. Окно с кнопками Да/Нет и иконкой вопроса
-    MessageBox(NULL, lpszHelloText, lpszHelloWndTitle,
-        MB_YESNO | MB_ICONQUESTION);
+        // Обработка результата
+        switch (iRetValue1)
+        {
+        case IDABORT:
+            lpszResponse = TEXT("Нажата кнопка Прервать (ABORT)");
+            break;
+        case IDRETRY:
+            lpszResponse = TEXT("Нажата кнопка Повторить (RETRY)");
+            break;
+        case IDIGNORE:
+            lpszResponse = TEXT("Нажата кнопка Пропустить (IGNORE)");
+            break;
+        default:
+            lpszResponse = TEXT("Ответ мне не понятен.");
+        }
 
-    // 3. Окно с кнопками ОК/Отмена и иконкой предупреждения
-    MessageBox(NULL, lpszHelloText, lpszHelloWndTitle,
-        MB_OKCANCEL | MB_ICONWARNING);
+        // Формируем сообщение для второго окна
+        TCHAR buf[200] = TEXT("");
+        lstrcat(buf, lpszResponse);
+        lstrcat(buf, TEXT("\n\nПродолжить изучение возвращаемых значений?"));
 
-    // 4. Окно с кнопками Повтор/Отмена/Пропустить и иконкой ошибки
-    MessageBox(NULL, lpszHelloText, lpszHelloWndTitle,
-        MB_ABORTRETRYIGNORE | MB_ICONERROR);
-
-    // 5. Окно с кнопками Да/Нет/Отмена и иконкой информации
-    MessageBox(NULL, lpszHelloText, lpszHelloWndTitle,
-        MB_YESNOCANCEL | MB_ICONINFORMATION);
+        // Второе окно с вопросом о продолжении
+        iRetValue2 = MessageBox(NULL, buf, lpszMesBoxTitle,
+            MB_YESNO | MB_ICONQUESTION | MB_SETFOREGROUND);
+    } while (iRetValue2 != IDNO);
 }
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     LPSTR lpszCmdLine, int nCmdShow)
 {
-    ShowDifferentMessageBoxes();
+    // Показываем информационное сообщение
+    LPCTSTR lpszHelloText = GetMessageText();
+    LPCTSTR lpszHelloWndTitle = MESSAGE_TITLE;
+    MessageBox(NULL, lpszHelloText, lpszHelloWndTitle, MB_OK | MB_ICONINFORMATION);
+
+    // Запускаем изучение возвращаемых значений
+    StudyMessageBoxValues();
+
     return 0;
 }
